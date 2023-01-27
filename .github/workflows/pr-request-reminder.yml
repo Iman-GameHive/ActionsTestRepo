@@ -1,0 +1,25 @@
+name: PR Review Time-out
+
+on:
+  pull_request:
+    types: [ready_for_review]
+
+jobs:
+  delayed_comment:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Wait for a minute"
+        run: sleep 1m
+
+      - name: "Comment to merge PR"
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            await github.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: ${{github.event.number}},
+              body: '24 hours have passed since this PR became available for review. Please merge it and reviews can happen after.'
+            });
