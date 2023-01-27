@@ -1,7 +1,7 @@
 name: PR Review Time-out
 
 on:
-  pull_request:
+  pull_request_target:
     types: [ready_for_review]
 
 jobs:
@@ -10,12 +10,11 @@ jobs:
 
     steps:
       - name: "Wait for a minute"
-        run: sleep 10
+        run: sleep 1
 
       - name: "Comment to merge PR"
         uses: actions/github-script@v6
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             await github.rest.issues.createComment({
               owner: context.repo.owner,
